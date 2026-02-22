@@ -70,6 +70,11 @@
             z-index: 1002;
         }
 
+        /* Fix: gør alle Leaflet markører klikbare i Safari */
+        .leaflet-marker-icon {
+            cursor: pointer;
+        }
+
         /* Gør søge- og kategoriboksene højere, smallere og mere runde med gennemsigtighed */
         .top-bar input, .top-bar select {
             margin-right: 15px;
@@ -143,9 +148,10 @@
     <script>
         // Initialiser kortet
         var map = L.map('map', {
-            center: [56.2639, 9.5018],  // Ændr koordinater
-            zoom: 6,  // Ændr zoomniveau
-            zoomControl: false  // Deaktiver standard zoom-knap
+            center: [56.2639, 9.5018],
+            zoom: 6,
+            zoomControl: false,
+            tap: false  // Fix: forhindrer Safari i at blokere click-events
         });
         // Tile layer for OpenStreetMap
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {

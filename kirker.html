@@ -108,8 +108,14 @@
             opacity: 0.7; /* Gennemsigtighed */
         }
 
-        /* Fix: Safari registrerer ikke click-events på divs uden cursor: pointer */
+        /* Fix: Safari kræver cursor: pointer + white-space for korrekt click-area */
         .churchLabel-name {
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        /* Fix: gør alle Leaflet markører klikbare i Safari */
+        .leaflet-marker-icon {
             cursor: pointer;
         }
 
@@ -134,9 +140,10 @@
     <script>
          // Initialiser kortet
          var map = L.map('map', {
-            center: [56.2639, 9.5018],  // Ændr koordinater
-            zoom: 6,  // Ændr zoomniveau
-            zoomControl: false  // Deaktiver standard zoom-knap
+            center: [56.2639, 9.5018],
+            zoom: 6,
+            zoomControl: false,
+            tap: false  // Fix: forhindrer Safari i at blokere click-events
         });
 
         // Tile layer for OpenStreetMap
@@ -197,8 +204,8 @@
                 var icon = L.divIcon({
                     className: 'churchLabel-name',
                     html: "<strong>" + churchLabel.churchLabel + "</strong>",
-                    iconSize: [30, 30],
-                    iconAnchor: [15, 15],
+                    iconSize: null,       // Lad div auto-sized til tekstens bredde
+                    iconAnchor: [0, 10], // Ankerpunkt ved venstre kant, lodret centreret
                     popupAnchor: [0, -15]
                 });
 
