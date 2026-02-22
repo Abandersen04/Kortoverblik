@@ -61,7 +61,7 @@
         .top-bar input, .top-bar select {
             margin-right: 15px;
             padding: 8px 10px;
-            font-size: 2px;
+            font-size: 13px;
             border-radius: 15px;
             width: auto;
         }
@@ -112,17 +112,17 @@
     <div class="top-bar-new">
         <a id="back-button" href="index.html">Hovedmenu</a>  <!-- tilbageknap -->
         <p>Placeringerne vises kun på sogne- og områdeniveau.<br>Data: <a href="https://www.wikidata.org/wiki/Wikidata:Main_Page" target="_blank">Wikidata</a></p>
-        </select>
+    </div>
 
-        <!-- Felter til at filtrere efter fødselsår -->
-        <div class="top-bar">
-            <input type="text" id="search-input" placeholder="Søg efter navn" />
-            <input type="number" id="born-after" placeholder="Født efter">
-            <input type="number" id="born-before" placeholder="Født før">
-            <select id="category-filter">
-                <option value="">Vælg profession</option>
-            </select>
-        </div>
+    <!-- Felter til at filtrere efter fødselsår -->
+    <div class="top-bar">
+        <input type="text" id="search-input" placeholder="Søg efter navn" />
+        <input type="number" id="born-after" placeholder="Født efter">
+        <input type="number" id="born-before" placeholder="Født før">
+        <select id="category-filter">
+            <option value="">Vælg profession</option>
+        </select>
+    </div>
 
 
     <script>
@@ -283,11 +283,21 @@ function updateMarkers() {
     addMarkers(filteredData); // Opdater markørerne
 }
 
+// Debounce for at undgå opdatering ved hvert tastetryk
+function debounce(fn, delay) {
+    let timer;
+    return function(...args) {
+        clearTimeout(timer);
+        timer = setTimeout(() => fn.apply(this, args), delay);
+    };
+}
+const debouncedUpdate = debounce(updateMarkers, 300);
+
 // Opdater markørerne ved ændringer
-document.getElementById("search-input").addEventListener("input", updateMarkers);
+document.getElementById("search-input").addEventListener("input", debouncedUpdate);
 document.getElementById("category-filter").addEventListener("change", updateMarkers);
-document.getElementById("born-after").addEventListener("input", updateMarkers);
-document.getElementById("born-before").addEventListener("input", updateMarkers);
+document.getElementById("born-after").addEventListener("input", debouncedUpdate);
+document.getElementById("born-before").addEventListener("input", debouncedUpdate);
 
 
     </script>

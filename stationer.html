@@ -61,7 +61,7 @@
         .top-bar input, .top-bar select {
             margin-right: 15px;
             padding: 8px 10px;
-            font-size: 2px;
+            font-size: 13px;
             border-radius: 15px;
             width: auto;
         }
@@ -147,7 +147,7 @@
 
         // Marker Cluster for effektiv håndtering af markører
         var markers = L.markerClusterGroup({
-    disableClusteringAtZoom: 1 // Slår clustering fra ved zoom 10+
+    disableClusteringAtZoom: 14
 });
 
 
@@ -290,11 +290,21 @@
     addMarkers(filteredData); // Opdater markørerne
 }
 
+// Debounce for at undgå opdatering ved hvert tastetryk
+function debounce(fn, delay) {
+    let timer;
+    return function(...args) {
+        clearTimeout(timer);
+        timer = setTimeout(() => fn.apply(this, args), delay);
+    };
+}
+const debouncedUpdate = debounce(updateMarkers, 300);
+
 // Opdater markørerne ved ændringer
-document.getElementById("search-input").addEventListener("input", updateMarkers);
+document.getElementById("search-input").addEventListener("input", debouncedUpdate);
 document.getElementById("category-filter").addEventListener("change", updateMarkers);
-document.getElementById("Byggeår-after").addEventListener("input", updateMarkers);
-document.getElementById("Byggeår-before").addEventListener("input", updateMarkers);
+document.getElementById("Byggeår-after").addEventListener("input", debouncedUpdate);
+document.getElementById("Byggeår-before").addEventListener("input", debouncedUpdate);
 
 
     </script>

@@ -62,7 +62,7 @@
         .top-bar input, .top-bar select {
             margin-right: 15px;
             padding: 8px 10px;
-            font-size: 2px;
+            font-size: 13px;
             border-radius: 15px;
             width: auto;
         }
@@ -104,15 +104,14 @@
     <div class="top-bar-new">
         <a id="back-button" href="index.html">Hovedmenu</a>  <!-- tilbageknap -->
         <p><strong><span style="font-size: 20px;">Danske kirker</span></strong><br>Data: <a href="https://www.wikidata.org/wiki/Wikidata:Main_Page" target="_blank">Wikidata</a> og <a href="https://www.wikipedia.org/" target="_blank">Wikipedia</a></p>
+    </div>
 
-        <!-- Felter til at filtrere efter fødselsår -->
-<!-- Felter til at filtrere efter fødselsår -->
-<div class="top-bar">
-    <input type="text" id="search-input" placeholder="Søg efter kirkenavn" />
-    <input type="number" id="Opført-after" placeholder="Opført efter">
-    <input type="number" id="Opført-before" placeholder="Opført før">
-    </select>
-</div>
+    <!-- Felter til at filtrere -->
+    <div class="top-bar">
+        <input type="text" id="search-input" placeholder="Søg efter kirkenavn" />
+        <input type="number" id="Opført-after" placeholder="Opført efter">
+        <input type="number" id="Opført-before" placeholder="Opført før">
+    </div>
 
     <script>
          // Initialiser kortet
@@ -235,10 +234,20 @@
             addMarkers(filteredData); // Opdater markørerne
         }
 
+        // Debounce for at undgå opdatering ved hvert tastetryk
+        function debounce(fn, delay) {
+            let timer;
+            return function(...args) {
+                clearTimeout(timer);
+                timer = setTimeout(() => fn.apply(this, args), delay);
+            };
+        }
+        const debouncedUpdate = debounce(updateMarkers, 300);
+
         // Opdater markørerne ved ændringer
-        document.getElementById("search-input").addEventListener("input", updateMarkers);
-        document.getElementById("Opført-after").addEventListener("input", updateMarkers);
-        document.getElementById("Opført-before").addEventListener("input", updateMarkers);
+        document.getElementById("search-input").addEventListener("input", debouncedUpdate);
+        document.getElementById("Opført-after").addEventListener("input", debouncedUpdate);
+        document.getElementById("Opført-before").addEventListener("input", debouncedUpdate);
     </script>
 </body>
 </html>
